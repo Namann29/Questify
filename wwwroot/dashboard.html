@@ -1,0 +1,354 @@
+cd<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard — Life as a Game</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/app.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.6/dist/chart.umd.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js" defer></script>
+</head>
+<body class="dash">
+  <div class="aurora" aria-hidden="true"></div>
+  <div class="noise" aria-hidden="true"></div>
+
+  <!-- Sidebar Navigation -->
+  <nav class="sidebar glass" id="sidebar">
+    <div class="sidebar-brand">
+      <span class="logo-orbit" aria-hidden="true"></span>
+      <div>
+        <p class="eyebrow tight">Life as a Game</p>
+        <h1 class="title">Command Center</h1>
+      </div>
+    </div>
+    <div class="sidebar-stats">
+      <div class="pill streak-pill" title="Daily streak">
+        <span class="streak-ico" aria-hidden="true">&#128293;</span>
+        <span id="streak-val">0</span>
+        <span class="muted">day streak</span>
+      </div>
+      <div class="pill level-pill">
+        <span class="muted">Level</span>
+        <strong id="level-val">1</strong>
+      </div>
+      <div class="pill coin-pill" title="Coins">
+        <span aria-hidden="true">&#129689;</span>
+        <span id="coins-val">0</span>
+        <span class="muted">coins</span>
+      </div>
+      <div class="pill gem-pill" title="Gems">
+        <span aria-hidden="true">&#128142;</span>
+        <span id="gems-val">0</span>
+        <span class="muted">gems</span>
+      </div>
+    </div>
+    <ul class="sidebar-nav" role="navigation">
+      <li><button class="nav-btn active" data-page="dashboard" aria-current="page"><span class="nav-icon">&#127968;</span> Dashboard</button></li>
+      <li><button class="nav-btn" data-page="quests"><span class="nav-icon">&#9876;</span> Quests</button></li>
+      <li><button class="nav-btn" data-page="skills"><span class="nav-icon">&#127775;</span> Skill Tree</button></li>
+      <li><button class="nav-btn" data-page="achievements"><span class="nav-icon">&#127942;</span> Achievements</button></li>
+      <li><button class="nav-btn" data-page="habits"><span class="nav-icon">&#128260;</span> Habits</button></li>
+      <li><button class="nav-btn" data-page="chains"><span class="nav-icon">&#128218;</span> Quest Chains</button></li>
+      <li><button class="nav-btn" data-page="intelligence"><span class="nav-icon">&#129504;</span> Intelligence</button></li>
+      <li><button class="nav-btn" data-page="analytics"><span class="nav-icon">&#128202;</span> Analytics</button></li>
+      <li><button class="nav-btn" data-page="shop"><span class="nav-icon">&#128722;</span> Shop</button></li>
+    </ul>
+    <div class="sidebar-footer">
+      <div class="theme-switcher" id="theme-switcher">
+        <button class="theme-dot active" data-theme="darkNeon" title="Dark Neon" style="background:linear-gradient(135deg,#7c5cff,#2dd4bf)"></button>
+        <button class="theme-dot" data-theme="minimalLight" title="Minimal Light" style="background:linear-gradient(135deg,#f8f9fc,#e0e4f0)"></button>
+        <button class="theme-dot" data-theme="cyberpunk" title="Cyberpunk" style="background:linear-gradient(135deg,#ff006e,#00ffc8)"></button>
+      </div>
+      <button type="button" class="btn btn-ghost btn-small" id="logout-btn">Logout</button>
+    </div>
+  </nav>
+
+  <!-- Mobile topbar -->
+  <header class="topbar-mobile glass" id="topbar-mobile">
+    <button class="hamburger" id="hamburger-btn" aria-label="Menu">&#9776;</button>
+    <div class="brand-mobile">
+      <span class="logo-orbit small" aria-hidden="true"></span>
+      <strong>Life as a Game</strong>
+    </div>
+    <div class="topbar-mobile-pills">
+      <div class="pill streak-pill"><span id="streak-val-m">0</span>&#128293;</div>
+      <div class="pill level-pill">Lv <strong id="level-val-m">1</strong></div>
+    </div>
+  </header>
+
+  <!-- Main Content Area -->
+  <main class="main-content" id="main-content">
+
+    <!-- Page: Dashboard -->
+    <div class="page page-dashboard active" id="page-dashboard">
+      <section class="hero glass glow-border">
+        <div class="hero-top">
+          <div>
+            <p class="eyebrow">Character progression</p>
+            <h2 id="hero-username" class="hero-name">Player</h2>
+            <p class="hero-sub" id="hero-level-caption">Progress to next level</p>
+          </div>
+          <div class="hero-xp-meta">
+            <span class="chip" id="total-xp-chip">0 XP lifetime</span>
+          </div>
+        </div>
+        <div class="xp-wrap">
+          <div class="xp-bar" id="xp-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+            <div class="xp-bar-fill" id="xp-bar-fill"></div>
+            <div class="xp-shimmer" aria-hidden="true"></div>
+          </div>
+          <div class="xp-legend">
+            <span id="xp-into">0</span>
+            <span class="muted">/</span>
+            <span id="xp-need">100</span>
+            <span class="muted">XP to Level</span>
+            <span id="xp-next-level">2</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="reco glass" id="difficulty-reco">
+        <div>
+          <p class="eyebrow">Dynamic difficulty</p>
+          <h3>Recommended: <span class="gradient-text" id="reco-label">Medium</span></h3>
+          <p class="reco-copy" id="reco-reason">We are learning your cadence...</p>
+        </div>
+        <div class="reco-stats">
+          <div class="mini-stat">
+            <span class="muted">7d completion</span>
+            <strong id="reco-rate">—</strong>
+          </div>
+          <div class="mini-stat">
+            <span class="muted">Quests cleared</span>
+            <strong id="reco-done">—</strong>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel glass panel-skills">
+        <div class="panel-head">
+          <h3>Skill matrix</h3>
+          <p class="muted small">Hover cards — watch the shimmer.</p>
+        </div>
+        <div class="skills-grid" id="skills-grid"></div>
+      </section>
+
+      <section class="panel glass panel-tasks">
+        <div class="panel-head row">
+          <div>
+            <h3>Daily quests</h3>
+            <p class="muted small">Complete tasks to fuel XP and skills.</p>
+          </div>
+          <button type="button" class="btn btn-primary btn-glow" id="open-quest-modal">
+            <span class="btn-label">+ New quest</span>
+          </button>
+        </div>
+        <ul class="task-list" id="task-list"></ul>
+      </section>
+
+      <section class="panel glass panel-feed">
+        <div class="panel-head">
+          <h3>Activity feed</h3>
+          <p class="muted small">Latest wins, level-ups, streak pulses.</p>
+        </div>
+        <ul class="feed" id="activity-feed"></ul>
+      </section>
+    </div>
+
+    <!-- Page: Quests (full task view) -->
+    <div class="page page-quests" id="page-quests">
+      <section class="panel glass">
+        <div class="panel-head row">
+          <div>
+            <h2>All Quests</h2>
+            <p class="muted small">Your complete quest log — active and completed.</p>
+          </div>
+          <button type="button" class="btn btn-primary btn-glow" id="open-quest-modal-2">
+            <span class="btn-label">+ New quest</span>
+          </button>
+        </div>
+        <ul class="task-list" id="task-list-full"></ul>
+      </section>
+    </div>
+
+    <!-- Page: Skill Tree -->
+    <div class="page page-skills" id="page-skills">
+      <section class="panel glass">
+        <div class="panel-head">
+          <h2>Skill Tree</h2>
+          <p class="muted small">Unlock nodes as your skills level up. Click to see details.</p>
+        </div>
+        <div id="skill-tree-container"></div>
+      </section>
+    </div>
+
+    <!-- Page: Achievements -->
+    <div class="page page-achievements" id="page-achievements">
+      <section class="panel glass">
+        <div class="panel-head">
+          <h2>Achievements</h2>
+          <p class="muted small">Unlock badges by completing milestones.</p>
+        </div>
+        <div class="achievements-grid" id="achievements-grid"></div>
+      </section>
+    </div>
+
+    <!-- Page: Habit Tracker -->
+    <div class="page page-habits" id="page-habits">
+      <section class="panel glass">
+        <div class="panel-head row">
+          <div>
+            <h2>Habit Tracker</h2>
+            <p class="muted small">Repeatable actions that build streaks and earn XP every cycle.</p>
+          </div>
+          <button type="button" class="btn btn-primary btn-glow" id="open-habit-modal">
+            <span class="btn-label">+ New habit</span>
+          </button>
+        </div>
+        <ul class="habits-list" id="habits-list"></ul>
+      </section>
+    </div>
+
+    <!-- Page: Quest Chains -->
+    <div class="page page-chains" id="page-chains">
+      <section class="panel glass">
+        <div class="panel-head">
+          <h2>Quest Chains</h2>
+          <p class="muted small">Complete multi-step quest chains to unlock rewards.</p>
+        </div>
+        <div id="quest-chains-container"></div>
+      </section>
+    </div>
+
+    <!-- Page: Intelligence -->
+    <div class="page page-intelligence" id="page-intelligence">
+      <section class="panel glass">
+        <div class="panel-head">
+          <h2>Activity Intelligence</h2>
+          <p class="muted small">Insights powered by your task data.</p>
+        </div>
+        <div id="intelligence-container"></div>
+      </section>
+      <section class="panel glass">
+        <div class="panel-head">
+          <h3>Activity Heatmap</h3>
+          <p class="muted small">Your contribution graph — GitHub style.</p>
+        </div>
+        <div id="heatmap-container"></div>
+      </section>
+    </div>
+
+    <!-- Page: Analytics -->
+    <div class="page page-analytics" id="page-analytics">
+      <section class="panel glass charts-panel">
+        <div class="panel-head">
+          <h2>Analytics</h2>
+          <p class="muted small">Weekly XP pulse + skill XP distribution.</p>
+        </div>
+        <div class="charts">
+          <div class="chart-box glass-inner">
+            <canvas id="chart-weekly" height="220" aria-label="Weekly XP chart"></canvas>
+          </div>
+          <div class="chart-box glass-inner">
+            <canvas id="chart-skills" height="220" aria-label="Skill XP chart"></canvas>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Page: Shop -->
+    <div class="page page-shop" id="page-shop">
+      <section class="panel glass">
+        <div class="panel-head">
+          <h2>Shop</h2>
+          <p class="muted small">Spend coins and gems on themes, boosts, and more.</p>
+        </div>
+        <div id="shop-container"></div>
+      </section>
+    </div>
+
+  </main>
+
+  <!-- Quest Modal -->
+  <div class="modal" id="quest-modal" hidden>
+    <div class="modal-backdrop" data-close="1"></div>
+    <div class="modal-card glass">
+      <div class="modal-head">
+        <h3>Forge a quest</h3>
+        <button type="button" class="icon-btn" id="close-quest-modal" aria-label="Close">&times;</button>
+      </div>
+      <form id="quest-form" class="auth-form">
+        <label class="field">
+          <span>Title</span>
+          <input name="title" required maxlength="120" placeholder="Deep work session" />
+        </label>
+        <div class="field-row">
+          <label class="field">
+            <span>Difficulty</span>
+            <select name="difficulty">
+              <option value="easy">Easy (+10 XP · +5 coins)</option>
+              <option value="medium" selected>Medium (+25 XP · +12 coins)</option>
+              <option value="hard">Hard (+50 XP · +25 coins)</option>
+            </select>
+          </label>
+          <label class="field">
+            <span>Skill</span>
+            <select name="skillType">
+              <option value="health">Health</option>
+              <option value="study" selected>Study</option>
+              <option value="social">Social</option>
+            </select>
+          </label>
+        </div>
+        <p id="quest-error" class="form-error" hidden></p>
+        <button type="submit" class="btn btn-primary btn-glow">
+          <span class="btn-label">Add quest</span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Habit Modal -->
+  <div class="modal" id="habit-modal" hidden>
+    <div class="modal-backdrop" data-close="1"></div>
+    <div class="modal-card glass">
+      <div class="modal-head">
+        <h3>Create a habit</h3>
+        <button type="button" class="icon-btn" id="close-habit-modal" aria-label="Close">&times;</button>
+      </div>
+      <form id="habit-form" class="auth-form">
+        <label class="field">
+          <span>Title</span>
+          <input name="title" required maxlength="120" placeholder="Morning workout" />
+        </label>
+        <div class="field-row">
+          <label class="field">
+            <span>Frequency</span>
+            <select name="frequency">
+              <option value="0" selected>Daily (+10 XP)</option>
+              <option value="1">Weekly (+25 XP)</option>
+            </select>
+          </label>
+          <label class="field">
+            <span>Skill</span>
+            <select name="skillType">
+              <option value="health">Health</option>
+              <option value="study" selected>Study</option>
+              <option value="social">Social</option>
+            </select>
+          </label>
+        </div>
+        <button type="submit" class="btn btn-primary btn-glow">
+          <span class="btn-label">Add habit</span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <script type="module" src="/js/dashboard.js"></script>
+</body>
+</html>
+

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login — Life as a Game</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/app.css" />
+</head>
+<body class="auth-page">
+  <div class="aurora" aria-hidden="true"></div>
+  <div class="auth-grid">
+    <section class="auth-hero glass">
+      <p class="eyebrow">Gamify your routine</p>
+      <h1>Life as a Game <span class="gradient-text">Dashboard</span></h1>
+      <p class="lede">
+        Earn XP, level real skills, and keep streaks alive — a premium HUD for your daily quests.
+      </p>
+      <ul class="auth-bullets">
+        <li>Glassmorphism HUD + animated XP</li>
+        <li>Adaptive difficulty hints</li>
+        <li>Weekly analytics powered by Chart.js</li>
+      </ul>
+    </section>
+    <section class="auth-panel glass">
+      <div class="tabs" role="tablist">
+        <button type="button" class="tab active" data-mode="login" role="tab" aria-selected="true">Login</button>
+        <button type="button" class="tab" data-mode="register" role="tab" aria-selected="false">Sign up</button>
+      </div>
+      <form id="auth-form" class="auth-form" autocomplete="on">
+        <label class="field">
+          <span>Username</span>
+          <input name="username" type="text" required minlength="3" maxlength="32" placeholder="player_one" />
+        </label>
+        <label class="field">
+          <span>Password</span>
+          <input name="password" type="password" required minlength="4" placeholder="••••••••" />
+        </label>
+        <p id="auth-error" class="form-error" hidden></p>
+        <button type="submit" class="btn btn-primary btn-glow" id="auth-submit">
+          <span class="btn-label">Enter the arena</span>
+          <span class="btn-shine" aria-hidden="true"></span>
+        </button>
+      </form>
+      <p class="fineprint">Demo auth — tokens live in <code>localStorage</code>. Swap for Identity + refresh tokens in production.</p>
+    </section>
+  </div>
+  <script type="module" src="/js/login.js"></script>
+</body>
+</html>
